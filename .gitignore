@@ -16,3 +16,5 @@ local.properties
 */build
 */release
 /release
+*.apk
+app/release/app-release.apk
