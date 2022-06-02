@@ -1,5 +1,4 @@
 (function (w) {
-	w.h5p.ready = false
 
 	var fnStack = {}
 
@@ -58,7 +57,6 @@
 	function onPlusReady() {
 		w.XMLHttpRequest = plus.net.XMLHttpRequest
 		// 加载页面，运行钩子
-		w.h5p.ready = true
 		w.h5p.startQrcodeScan = startQrcodeScan
 		w.h5p.uploadImage = uploadImage
 		w.h5p.upload = upload
