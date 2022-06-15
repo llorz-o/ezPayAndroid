@@ -116,7 +116,7 @@
 			if (e.result === 'none') {
 				try {
 					plus.navigator.createShortcut({
-						name: "EzPay",
+						name: "VipPay",
 						toast: "",
 					}, shield)
 				} catch (error) {
