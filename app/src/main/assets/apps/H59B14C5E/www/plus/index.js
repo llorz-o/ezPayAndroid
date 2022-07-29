@@ -63,6 +63,10 @@
 		w.h5p.downWgt = downWgt
 		w.h5p.closeSplash = closeSplash
 		w.h5p.installWgt = installWgt
+		w.h5p.beep = function () {
+			plus.device.beep();
+			plus.device.vibrate();
+		}
 		// 注入参数
 		// 获取手机唯一码 uuid,设备型号，操作系统
 		// 传入schema参数
@@ -77,6 +81,55 @@
 				})
 			})
 		})
+		// 其他内容处理
+		try {
+
+			plus.key.addEventListener("backbutton", function (e) {
+				// 忽略返回按钮
+			})
+
+			if (plus.os.name != "Android") {
+				return;
+			}
+			// 安卓中利用播放音乐保活app
+			var audioHandler = plus.audio.createPlayer("/assets/audio/10-seconds-of-silence.mp3");
+			audioHandler.addEventListener("ended", function () {
+				console.log("静音播放结束")
+				playSilence()
+			})
+			// audioHandler.addEventListener("play", function() {
+			// 	console.log("静音播放")
+			// })
+			// audioHandler.addEventListener("pause", function() {
+			// 	console.log("静音暂停")
+			// })
+			audioHandler.addEventListener("stop", function () {
+				console.log("静音播放停止")
+			})
+			audioHandler.addEventListener("error", function () {
+				console.log("静音播放失败")
+			})
+			audioHandler.addEventListener("waiting", function () {
+				console.log("静音加载中")
+			})
+			audioHandler.addEventListener("canplay", function () {
+				console.log("静音可以播放")
+				playSilence()
+			})
+			var playSilence = function () {
+				// plus.device.setVolume(0.1);
+				audioHandler.play(function () {
+					console.log("静音播放中")
+				}, function (e) {
+					console.log(e, "播放失败");
+				})
+			}
+
+			playSilence()
+
+		} catch (e) {
+			//TODO handle the exception
+		}
 	}
 
 	if (w.plus) {
@@ -229,6 +282,11 @@
 	}
 	// 获取 device-model and system
 	function getDeviceModelAndSystem() {
+		console.log(JSON.stringify({
+			system: plus.os.name,
+			version: plus.os.version,
+			model: plus.device.model
+		}));
 		return {
 			system: plus.os.name,
 			version: plus.os.version,
@@ -294,10 +352,6 @@
 					console.error(err)
 					cb(false)
 				}, {
-					crop: {
-						width: 200,
-						height: 200
-					},
 					filename: "_doc/camera/",
 					format: "png",
 					index: 1,

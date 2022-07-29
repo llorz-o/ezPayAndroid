@@ -9,8 +9,8 @@ android {
         applicationId "com.joe.ezpayandroid"
         minSdk 21
         targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        versionCode 12
+        versionName "version" // appVersion
         multiDexEnabled true
         ndk {
             abiFilters 'armeabi-v7a'
@@ -36,6 +36,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {

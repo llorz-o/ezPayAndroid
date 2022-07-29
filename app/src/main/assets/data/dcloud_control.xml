@@ -1,6 +1,7 @@
 
 <hbuilder >
 <apps>
-    <app appid="H59B14C5E" appver="0.0.1"/>
+<!--    appVersion-->
+    <app appid="H59B14C5E" appver="version"/>
 </apps>
 </hbuilder>
