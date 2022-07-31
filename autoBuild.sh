@@ -72,5 +72,5 @@ read version
 if [ "$version" = "" ]; then
     runTest "121212"
 else
-    runBuild version
+    runBuild $version
 fi
