@@ -25,7 +25,7 @@ runBuild() {
 
         projectRoot='C:\Personal\Personal_Projects\HT\ezpayAndroid'
         cd $projectRoot && ./gradlew assembleRelease
-        openReleaseDir='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\release'
+        openReleaseDir='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build\outputs\apk\release'
         explorer $openReleaseDir
 
         # 验证是否签名
@@ -34,7 +34,7 @@ runBuild() {
         # 由于路径中包含空格所以 实际执行时必须包含在双引号中
         cd "$keytoolPath" && ./keytool -list -v -keystore $keystorePath -storepass 725361
 
-        releaseReleaseApkPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\release\app-release.apk'
+        releaseReleaseApkPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build\outputs\apk\release\app-release.apk'
         cd "$keytoolPath" && ./keytool -printcert -jarfile $releaseReleaseApkPath
 
         # 签名
@@ -55,11 +55,11 @@ runBuild() {
 
 runTest() {
     echo "测试:"
-    keystorePath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\ezpay.keystore'
-    keytoolPath='C:\Program Files\Android\Android Studio\jre\bin'
-    cd "$keytoolPath" && ./keytool -list -v -keystore $keystorePath -storepass 725361
-    releaseReleaseApkPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\release\app-release.apk'
-    cd "$keytoolPath" && ./keytool -printcert -jarfile $releaseReleaseApkPath
+    # keystorePath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\ezpay.keystore'
+    # keytoolPath='C:\Program Files\Android\Android Studio\jre\bin'
+    # cd "$keytoolPath" && ./keytool -list -v -keystore $keystorePath -storepass 725361
+    # releaseReleaseApkPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build\outputs\apk\release\app-release.apk'
+    # cd "$keytoolPath" && ./keytool -printcert -jarfile $releaseReleaseApkPath
     echo "错误:$?"
     echo "点击按钮关闭"
     read a
@@ -68,9 +68,22 @@ runTest() {
 echo "请输入版本号:"
 # 当会车时version 可以用 "version" 判空
 read version
+echo "是否直接打包web文件?[yes/no]:"
+read answer
+
+while ([ "$answer" != "yes" ] && [ "$answer" != "no" ]); do
+    echo "Error! 请输入yes or no"
+    echo "是否直接打包web文件?[yes/no]:"
+    read answer
+done
 
 if [ "$version" = "" ]; then
     runTest "121212"
 else
+    if [ "$answer" = "yes" ]; then
+        echo "replace config.js version:$version"
+        sed -i 's/version:"[0-9\.]\+"/version:"'$version'"/' 'C:\Personal\Personal_Projects\HT\ez_pay\config.js'
+        cd 'C:\Personal\Personal_Projects\HT\ez_pay' && npm run release
+    fi
     runBuild $version
 fi
