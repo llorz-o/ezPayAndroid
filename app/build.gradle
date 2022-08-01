@@ -10,7 +10,7 @@ android {
         minSdk 21
         targetSdk 32
         versionCode 12
-        versionName "version" // appVersion
+        versionName "1.2.5" // appVersion
         multiDexEnabled true
         ndk {
             abiFilters 'armeabi-v7a'
@@ -22,7 +22,7 @@ android {
         config {
             keyAlias 'ezpay'
             keyPassword '725361'
-            storeFile file("/ezpay.keystore")
+            storeFile file("./ezpay.keystore")
             storePassword '725361'
             v1SigningEnabled true
             v2SigningEnabled true
