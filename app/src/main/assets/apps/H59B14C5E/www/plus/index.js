@@ -344,8 +344,8 @@
 				cmr.captureImage(function (capturedFile) {
 					if (isFilePath) return cb(capturedFile)
 					// 得到图片路径
-					readFile(capturedFile, function (blob) {
-						cb(blob)
+					readFile(capturedFile, function (blob, name, type) {
+						cb(blob, name, type, path)
 					})
 				}, function (err) {
 					// 失败
@@ -364,8 +364,8 @@
 				pickImage(function (path) {
 					if (isFilePath) return cb(path)
 					if (path) {
-						readFile(path, function (blob) {
-							cb(blob)
+						readFile(path, function (blob, name, type) {
+							cb(blob, name, type, path)
 						})
 					} else {
 						cb(false)
@@ -388,14 +388,13 @@
 	// 读取图片文件
 	function readFile(path, cb) {
 		plus.io.resolveLocalFileSystemURL(path, function (entry) {
-			var localUrl = entry.toLocalURL();
 			entry.file(function (evt) {
 				var reader = new plus.io.FileReader();
 				reader.readAsDataURL(evt);
 				reader.onloadend = function (e) {
 					// console.log(reader.result);
 					var blob = base64toBlob(reader.result, "UTF-8");
-					cb(blob)
+					cb(blob, evt.name, evt.type)
 				}
 				//Base64转二进制
 				function base64toBlob(base64, type) {
