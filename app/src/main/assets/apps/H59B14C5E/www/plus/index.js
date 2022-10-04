@@ -151,14 +151,14 @@
 		checkArguments()
 	}, false)
 
-	function createTestPage() {
-		createWithoutTitle("plus/test.html", {
-			width: "100%",
-			height: "65%",
-			left: 0,
-			bottom: 0,
-		})
-	}
+	// function createTestPage() {
+	// 	createWithoutTitle("plus/test.html", {
+	// 		width: "100%",
+	// 		height: "65%",
+	// 		left: 0,
+	// 		bottom: 0,
+	// 	})
+	// }
 
 	function closeSplash() {
 		const has = plus.navigator.hasSplashscreen()
