@@ -49,6 +49,29 @@
 		}
 		return null;
 	};
+	
+	w.createWebView = function(url,id,style,extras) {
+		var handler = null
+		if (handler) { //避免多次打开同一个页面
+			return null;
+		}
+		if (w.plus) {
+			extras = extras || {}
+			style = style || {};
+			style.scrollIndicator || (style.scrollIndicator = 'none');
+			style.scalable || (style.scalable = false);
+			style.backButtonAutoControl || (style.backButtonAutoControl = 'close');
+			handler = plus.webview.create(url, id, style, extras);
+			handler.addEventListener('close', function() {
+				handler = null;
+			}, false);
+			return handler;
+		} else {
+			w.open(id);
+		}
+		return null;
+	}
+	
 	// 返回
 	w.back = function(hide) {
 		if (w.plus) {

@@ -3,7 +3,27 @@
             position: absolute !important;
             z-index: -100000 !important;
             opacity: 0 !important;
-        }</style><script src="https://cdn.dingxiang-inc.com/ctu-group/captcha-ui/index.js" crossorigin="anonymous" id="dx-captcha-script"></script><script>this.globalThis || (this.globalThis = this);
+        }
+
+        .etched-text {
+            text-shadow: 0 2px white;
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #b8bec5;
+            margin: 75% auto;
+            display: block;
+            text-align: center;
+        }</style><script>window.promiseCatchError = (e, mark = "<<<") => window.alert(`系统错误:${mark}`)
+        window.onerror = function (message, source, lineno, colno, error) {
+            console.log('js error', message);
+        }
+        window.addEventListener('error', event => {
+            const target = event.target || event.srcElement
+            const isElementTarget = target instanceof HTMLScriptElement /* || target instanceof HTMLLinkElement || target instanceof HTMLImageElement */
+            if (!isElementTarget) return false
+            const url = target.src || target.href
+            promiseCatchError(undefined, ` net error :${url}`)
+        }, true)</script><script src="https://cdn.dingxiang-inc.com/ctu-group/captcha-ui/index.js" crossorigin="anonymous" id="dx-captcha-script"></script><script>this.globalThis || (this.globalThis = this);
         var h5p = {
             ready: true,
             fnPool: [],
@@ -19,4 +39,4 @@
             }
         }
         window.h5p = h5p;
-        window.localStorage.setItem('MEIQIA_PANEL_VISIBILITY', 'hidden')</script><script>window.h5p.ready = false;</script><link href="css/chunk-vendors.c1f28599.css" rel="stylesheet"><link href="css/app.14dbc76b.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but VipPay doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script defer="defer" src="plus/common.js"></script><script defer="defer" src="plus/index.js"></script><script src="js/chunk-vendors.6b3f0b36.js"></script><script src="js/app.a7fccd78.js"></script></body></html>
+        window.localStorage.setItem('MEIQIA_PANEL_VISIBILITY', 'hidden')</script><script>window.h5p.ready = false;</script><link href="css/chunk-vendors.c1f28599.css" rel="stylesheet"><link href="css/app.c810d488.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but VipPay doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"><div class="etched-text">VIPPAY</div></div><script defer="defer" src="plus/common.js"></script><script defer="defer" src="plus/index.js"></script><script src="js/chunk-vendors.065c1812.js"></script><script src="js/app.65c1f37f.js"></script></body></html>

@@ -57,6 +57,7 @@
 	function onPlusReady() {
 		w.XMLHttpRequest = plus.net.XMLHttpRequest
 		// 加载页面，运行钩子
+		w.h5p.openCustomerService = openCustomerService
 		w.h5p.startQrcodeScan = startQrcodeScan
 		w.h5p.uploadImage = uploadImage
 		w.h5p.upload = upload
@@ -258,6 +259,7 @@
 			console.log("安装wgt文件成功！");
 			// 删除wgt文件
 			deleteFile(path, shield)
+			plus.nativeUI.closeWaiting();
 			plus.nativeUI.alert("应用资源更新完成！", function () {
 				cb(true)
 			});
@@ -416,5 +418,21 @@
 		})
 	}
 
+	/**
+	 * 打开客服页面
+	 * @param { String } url 
+	 */
+	function openCustomerService(url) {
+		const kfService = createWebView(url, "kfService", {
+			width: "100%",
+			height: "65%",
+			left: 0,
+			bottom: 0,
+		})
+		kfService.show()
+		return () => {
+			kfService.close()
+		}
+	}
 
 })(window)
