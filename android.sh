@@ -1,6 +1,23 @@
 # 直接使用 dirname 和 使用 pwd 输出的路径在windows上是有差别的，window上 dirname 输出的是反斜杠
 shell_dir=$(cd "$(dirname "$0")" && pwd)
 
+safe_sed() {
+  if [ "$(uname)" == "Darwin" && "$(which sed)" == "/usr/bin/sed" ]; then
+    brew install gnu-sed
+    # PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+    # shellcheck disable=SC2016
+    echo 'PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"' >> ~/.zshrc
+    cd ~ && source .zshrc
+
+    if [ "$(which sed)" != "/usr/local/opt/gnu-sed/libexec/gnubin/sed" ]; then
+      echo "gnu-sed install failed, pls install it manual"
+      return 1
+    fi
+    return 0
+  fi
+  return 0
+}
+
 ezpay_dir() {
   # /Users/joe/Documents/GitHub/ezPay
   if [ "$(uname)" == "Darwin" ]; then
@@ -97,6 +114,9 @@ runTest() {
     echo "点击按钮关闭"
     read -r
 }
+
+safe_sed
+
 echo "请输入版本号:"
 # 当会车时version 可以用 "version" 判空
 read -r version
