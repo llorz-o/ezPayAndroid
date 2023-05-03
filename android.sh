@@ -134,7 +134,7 @@ if [ "$version" = "" ]; then
 else
     if [ "$answer" = "yes" ]; then
         echo "replace config.js version:$version"
-        sed -i 's/version:"[0-9\.]\+"/version:"'"$version"'"/' ''"$(ezpay_dir)"'\config.js'
+        sed -i 's/version:"[0-9\.]\+"/version:"'"$version"'"/' ''"$(ezpay_dir)"'/config.js'
         cd "$(ezpay_dir)" && npm run release
     fi
     runBuild "$version"
