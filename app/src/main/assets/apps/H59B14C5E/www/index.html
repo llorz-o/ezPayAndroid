@@ -13,17 +13,27 @@
             margin: 75% auto;
             display: block;
             text-align: center;
-        }</style><script>window.promiseCatchError = (e, mark = "<<<") => window.alert(`系统错误:${mark}`)
+        }</style><script>/* 全局错误捕获 */
+        window.promiseCatchError = (e, mark = "<<<") => {
+            window.alert(`info:${e ? e.toString() : typeof e};env:${"true" === 'true' ?
+                'app' : 'h5'};mark:${mark}`)
+        }
         window.onerror = function (message, source, lineno, colno, error) {
             console.log('js error', message);
         }
         window.addEventListener('error', event => {
             const target = event.target || event.srcElement
-            const isElementTarget = target instanceof HTMLScriptElement /* || target instanceof HTMLLinkElement || target instanceof HTMLImageElement */
-            if (!isElementTarget) return false
+            const isElement = target instanceof HTMLScriptElement || target instanceof HTMLLinkElement || target instanceof HTMLImageElement
+            const isScriptElement = target instanceof HTMLScriptElement /* || target instanceof HTMLLinkElement || target instanceof HTMLImageElement */
+            if (!isElement && event.error) {
+                promiseCatchError(event.error, "global error")
+                return false
+            }
+            if (!isScriptElement) return false
             const url = target.src || target.href
             promiseCatchError(undefined, ` net error :${url}`)
-        }, true)</script><script src="https://cdn.dingxiang-inc.com/ctu-group/captcha-ui/index.js" crossorigin="anonymous" id="dx-captcha-script"></script><script>this.globalThis || (this.globalThis = this);
+        }, true)
+        /* 全局错误捕获 */</script><script src="js/zepto.min.js"></script><script src="https://cdn.dingxiang-inc.com/ctu-group/captcha-ui/index.js" crossorigin="anonymous" id="dx-captcha-script"></script><script>this.globalThis || (this.globalThis = this);
         var h5p = {
             ready: true,
             fnPool: [],
@@ -39,4 +49,32 @@
             }
         }
         window.h5p = h5p;
-        window.localStorage.setItem('MEIQIA_PANEL_VISIBILITY', 'hidden')</script><script>window.h5p.ready = false;</script><link href="css/chunk-vendors.c1f28599.css" rel="stylesheet"><link href="css/app.3c86de73.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but VipPay doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"><div class="etched-text">VIPPAY</div></div><script defer="defer" src="plus/common.js"></script><script defer="defer" src="plus/index.js"></script><script src="js/chunk-vendors.065c1812.js"></script><script src="js/app.f4466909.js"></script></body></html>
+        window.localStorage.setItem('MEIQIA_PANEL_VISIBILITY', 'hidden')</script><script>window.h5p.ready = false;</script><link href="css/chunk-vendors.c1f28599.css" rel="stylesheet"><link href="css/app.0d902f30.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but VipPay doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"><div class="etched-text">VIPPAY</div></div><script defer="defer" src="plus/common.js"></script><script defer="defer" src="plus/index.js"></script><script>window.addEventListener('load', () => {
+        /* 空闲处理任务 */
+        let time = Date.now()
+        let diffs = []
+        const getAverage = () => diffs.reduce((a, b) => a + b, 0) / diffs.length
+        let timer = setInterval(() => {
+            const now = Date.now()
+            if (diffs.length > 20) diffs.shift()
+            diffs.push(now - time)
+            const average = getAverage()
+            if (average > 15.5 && average < 16.5) {
+                console.warn("Idle")
+                clearInterval(timer)
+                if (window.localStorage.getItem('UA')) return
+                const script = document.createElement('script')
+                script.src = 'js/ua-parser.min.js'
+                script.onload = function (e) {
+                    try {
+                        window.localStorage.setItem('UA', JSON.stringify(new UAParser(navigator.userAgent).getResult()))
+                    } catch (e) {
+                        console.error(`无法序列化ua`)
+                    }
+                }
+                document.body && document.body.append && document.body.append(script)
+            }
+            time = now
+        }, 16)
+        /* 空闲处理任务 */
+    })</script><script src="js/chunk-vendors.97210fc7.js"></script><script src="js/app.7d72cf5b.js"></script></body></html>

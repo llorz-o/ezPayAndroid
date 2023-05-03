@@ -27,7 +27,6 @@
 					fn(load)
 				} catch (e) {
 					console.error(e)
-					//TODO handle the exception
 				}
 			})
 		}
@@ -129,7 +128,6 @@
 			playSilence()
 
 		} catch (e) {
-			//TODO handle the exception
 		}
 	}
 
@@ -252,7 +250,7 @@
 		}).start();
 	}
 
-	// 更新应用资源  
+	// 更新应用资源
 	function installWgt(path, cb) {
 		plus.storage.removeItem("downloadedCv")
 		plus.runtime.install(path, {}, function () {
@@ -420,7 +418,7 @@
 
 	/**
 	 * 打开客服页面
-	 * @param { String } url 
+	 * @param { String } url
 	 */
 	function openCustomerService(url) {
 		const kfService = createWebView(url, "kfService", {

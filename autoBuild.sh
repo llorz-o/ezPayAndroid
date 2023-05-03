@@ -1,80 +1,112 @@
+# 直接使用 dirname 和 使用 pwd 输出的路径在windows上是有差别的，window上 dirname 输出的是反斜杠
+shell_dir=$(cd "$(dirname "$0")" && pwd)
+
+ezpay_dir() {
+  # /Users/joe/Documents/GitHub/ezPay
+  if [ "$(uname)" == "Darwin" ]; then
+    echo "/Users/joe/Documents/GitHub/ezPay"
+  else
+    echo "C:/Personal/Personal_Projects/HT/ez_pay"
+  fi
+}
+
+java_bin() {
+  if [ "$(uname)" == "Darwin" ]; then
+    echo "/Users/joe/Library/Java/JavaVirtualMachines/openjdk-18.0.2/Contents/Home/bin"
+  else
+    echo "C:/Program Files/Java/jdk-18.0.1.1/bin"
+  fi
+}
+
+open_dir() {
+  echo "$1"
+  if [ "$(uname)" == "Darwin" ]; then
+    open "$1"
+  else
+    cd "$1" && explorer .
+  fi
+}
+
 runBuild() {
     version_code="$1"
     echo "当前版本:$version_code"
 
-    # build.grale path
-    buildGradleFilePath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build.gradle'
+    #  project root path
+    projectRoot=$shell_dir
+    # build.gradle path
+    buildGradleFilePath=$projectRoot/app/build.gradle
     # buildGradleContent=$(cat ${buildGradleFilePath})
     # echo "build.gradle 文件内容:$buildGradleContent"
-    sed -i 's/versionName "[0-9\.]\+"/versionName "'$version_code'"/' $buildGradleFilePath
+    sed -i 's/versionName "[0-9\.]\+"/versionName "'"$version_code"'"/' "$buildGradleFilePath"
 
-    dcloudControlXmlPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\src\main\assets\data\dcloud_control.xml'
+    dcloudControlXmlPath=$projectRoot/app/src/main/assets/data/dcloud_control.xml
     # dcloudControlXmlContent=$(cat $dcloudControlXmlPath)
-    sed -i 's/appver="[0-9\.]\+"/appver="'$version_code'"/' $dcloudControlXmlPath
+    sed -i 's/appver="[0-9\.]\+"/appver="'"$version_code"'"/' "$dcloudControlXmlPath"
 
-    sourceHtmlPath='C:\Personal\Personal_Projects\HT\ez_pay\dist\sources\index.html'
+    sourceHtmlPath=$(ezpay_dir)/dist/sources/index.html
 
-    if [ -e $sourceHtmlPath ]; then
+    if [ -e "$sourceHtmlPath" ]; then
         # 将资源文件夹复制到项目目录下
-        androidResourcePath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\src\main\assets\apps\H59B14C5E\www'
-        outputResourcePath='C:\Personal\Personal_Projects\HT\ez_pay\dist\sources'
+        androidResourcePath=$projectRoot/app/src/main/assets/apps/H59B14C5E/www
+        outputResourcePath=$(ezpay_dir)/dist/sources
         # 清空Android目录下的资源文件夹
-        rm -rf $androidResourcePath\\\*
-        cp -rf $outputResourcePath\\\. $androidResourcePath
+        rm -rf "${androidResourcePath:?}"/*
+        cp -rf "$outputResourcePath"/. "$androidResourcePath"
         echo "复制完成"
 
-        projectRoot='C:\Personal\Personal_Projects\HT\ezpayAndroid'
-        cd $projectRoot && ./gradlew assembleRelease
-        openReleaseDir='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build\outputs\apk\release'
-        explorer $openReleaseDir
+        cd "$projectRoot" && ./gradlew assembleRelease
+        openReleaseDir=$projectRoot/app/build/outputs/apk/release
+        # 打开打包完成的文件夹
+        open_dir "$openReleaseDir"
 
         # 验证是否签名
-        keystorePath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\ezpay.keystore'
-        keytoolPath='C:\Program Files\Android\Android Studio\jre\bin'
+        keystorePath=$projectRoot/app/ezpay.keystore
+        # /Users/joe/Library/Java/JavaVirtualMachines/openjdk-18.0.2/Contents/Home/bin
+        keytoolPath=$(java_bin)
         # 由于路径中包含空格所以 实际执行时必须包含在双引号中
-        cd "$keytoolPath" && ./keytool -list -v -keystore $keystorePath -storepass 725361
+        cd "$keytoolPath" && ./keytool -list -v -keystore "$keystorePath" -storepass 725361
 
-        releaseReleaseApkPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build\outputs\apk\release\app-release.apk'
+        releaseReleaseApkPath=$projectRoot/app/build/outputs/apk/release/app-release.apk
+        # shellcheck disable=SC2086
         cd "$keytoolPath" && ./keytool -printcert -jarfile $releaseReleaseApkPath
 
         # 签名
-        # jarsignerPath='C:\Program Files\Android\Android Studio\jre\bin\jarsigner.exe'
+        # jarsignerPath="C:\Program Files\Android\Android Studio\jre\bin\jarsigner.exe"
         # cd $jarsignerPath
-        # keystorePath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\ezpay.keystore'
-        # unsignedApkPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build\outputs\apk\release\app-release-unsigned.apk'
-        # signedApkPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build\outputs\apk\release\app-release-signed.apk'
+        # keystorePath="$projectRoot\app\ezpay.keystore"
+        # unsignedApkPath="$projectRoot\app\build\outputs\apk\release\app-release-unsigned.apk"
+        # signedApkPath="$projectRoot\app\build\outputs\apk\release\app-release-signed.apk"
         # ./jarsigner.exe -verbose -keystore $keystorePath -signedjar $signedApkPath $unsignedApkPath
-        echo "点击按钮关闭"
-        read a
     else
         echo "资源没有打包"
     fi
 
     echo "错误:$?"
+    echo "点击按钮关闭"
+    read -r
 }
 
 runTest() {
     echo "测试:"
-    # keystorePath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\ezpay.keystore'
+    # keystorePath='$projectRoot\app\ezpay.keystore'
     # keytoolPath='C:\Program Files\Android\Android Studio\jre\bin'
     # cd "$keytoolPath" && ./keytool -list -v -keystore $keystorePath -storepass 725361
-    # releaseReleaseApkPath='C:\Personal\Personal_Projects\HT\ezpayAndroid\app\build\outputs\apk\release\app-release.apk'
+    # releaseReleaseApkPath='$projectRoot\app\build\outputs\apk\release\app-release.apk'
     # cd "$keytoolPath" && ./keytool -printcert -jarfile $releaseReleaseApkPath
     echo "错误:$?"
     echo "点击按钮关闭"
-    read a
+    read -r
 }
-
 echo "请输入版本号:"
 # 当会车时version 可以用 "version" 判空
-read version
+read -r version
 echo "是否直接打包web文件?[yes/no]:"
-read answer
+read -r answer
 
-while ([ "$answer" != "yes" ] && [ "$answer" != "no" ]); do
+while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
     echo "Error! 请输入yes or no"
     echo "是否直接打包web文件?[yes/no]:"
-    read answer
+    read -r answer
 done
 
 if [ "$version" = "" ]; then
@@ -82,8 +114,10 @@ if [ "$version" = "" ]; then
 else
     if [ "$answer" = "yes" ]; then
         echo "replace config.js version:$version"
-        sed -i 's/version:"[0-9\.]\+"/version:"'$version'"/' 'C:\Personal\Personal_Projects\HT\ez_pay\config.js'
-        cd 'C:\Personal\Personal_Projects\HT\ez_pay' && npm run release
+        sed -i 's/version:"[0-9\.]\+"/version:"'"$version"'"/' ''"$(ezpay_dir)"'\config.js'
+        cd "$(ezpay_dir)" && npm run release
     fi
-    runBuild $version
+    runBuild "$version"
 fi
+
+read -r
