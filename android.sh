@@ -2,7 +2,7 @@
 shell_dir=$(cd "$(dirname "$0")" && pwd)
 
 safe_sed() {
-  if [ "$(uname)" == "Darwin" && "$(which sed)" == "/usr/bin/sed" ]; then
+  if [ "$(uname)" == "Darwin" ] && [ "$(which sed)" == "/usr/bin/sed" ]; then
     brew install gnu-sed
     # PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
     # shellcheck disable=SC2016
@@ -36,11 +36,12 @@ java_bin() {
 }
 
 open_dir() {
-  echo "$1"
-  if [ "$(uname)" == "Darwin" ]; then
-    open "$1"
-  else
-    cd "$1" && explorer .
+  if [ "$1" != "build" ]; then
+    if [ "$(uname)" == "Darwin" ]; then
+      open "$1"
+    else
+      cd "$1" && explorer .
+    fi
   fi
 }
 
@@ -139,5 +140,3 @@ else
     fi
     runBuild "$version"
 fi
-
-read -r
