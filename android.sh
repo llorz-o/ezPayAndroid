@@ -1,5 +1,6 @@
 # 直接使用 dirname 和 使用 pwd 输出的路径在windows上是有差别的，window上 dirname 输出的是反斜杠
 shell_dir=$(cd "$(dirname "$0")" && pwd)
+arg1="$1"
 
 safe_sed() {
   if [ "$(uname)" == "Darwin" ] && [ "$(which sed)" == "/usr/bin/sed" ]; then
@@ -36,7 +37,7 @@ java_bin() {
 }
 
 open_dir() {
-  if [ "$1" != "build" ]; then
+  if [ "$arg1" != "build" ]; then
     if [ "$(uname)" == "Darwin" ]; then
       open "$1"
     else
@@ -101,7 +102,9 @@ runBuild() {
 
     echo "错误:$?"
     echo "点击按钮关闭"
-    read -r
+    if [ "$arg1" != "build" ]; then
+      read -r
+    fi
 }
 
 runTest() {
