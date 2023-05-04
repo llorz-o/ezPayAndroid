@@ -56,7 +56,7 @@ runBuild() {
     buildGradleFilePath=$projectRoot/app/build.gradle
     # buildGradleContent=$(cat ${buildGradleFilePath})
     # echo "build.gradle 文件内容:$buildGradleContent"
-    sed -i 's/versionName "[0-9\.]\+"/versionName "'"$version_code"'"/' "$buildGradleFilePath"
+    sed -i 's/versionName "[0-9\.]\+"/versionName "'$version_code'"/' "$buildGradleFilePath"
 
     dcloudControlXmlPath=$projectRoot/app/src/main/assets/data/dcloud_control.xml
     # dcloudControlXmlContent=$(cat $dcloudControlXmlPath)
@@ -138,7 +138,9 @@ if [ "$version" = "" ]; then
 else
     if [ "$answer" = "yes" ]; then
         echo "replace config.js version:$version"
-        sed -i 's/version:"[0-9\.]\+"/version:"'"$version"'"/' ''"$(ezpay_dir)"'/config.js'
+        sed -i 's/version: \?"[0-9\.]\+"/version: "'"$version"'"/' "$(ezpay_dir)/config.js"
+        read -r
+        exit 0;
         cd "$(ezpay_dir)" && npm run release
     fi
     runBuild "$version"
