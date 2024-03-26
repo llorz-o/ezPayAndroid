@@ -11,7 +11,7 @@ safe_sed() {
     cd ~ && source .zshrc
 
     if [ "$(which sed)" != "/usr/local/opt/gnu-sed/libexec/gnubin/sed" ]; then
-      echo "gnu-sed install failed, pls install it manual"
+      echo "⚠️ gnu-sed install failed, pls install it manual"
       return 1
     fi
     return 0
@@ -20,9 +20,9 @@ safe_sed() {
 }
 
 ezpay_dir() {
-  # /Users/joe/Documents/GitHub/ezPay
+  # /Users/joe/GitHub/ezPay
   if [ "$(uname)" == "Darwin" ]; then
-    echo "/Users/joe/Documents/GitHub/ezPay"
+    echo "/Users/joe/GitHub/ezPay"
   else
     echo "C:/Personal/Personal_Projects/HT/ez_pay"
   fi
@@ -30,7 +30,7 @@ ezpay_dir() {
 
 java_bin() {
   if [ "$(uname)" == "Darwin" ]; then
-    echo "/Users/joe/Library/Java/JavaVirtualMachines/openjdk-18.0.2/Contents/Home/bin"
+    echo "/Users/joe/.sdkman/candidates/java/17.0.9-amzn/bin"
   else
     echo "C:/Program Files/Java/jdk-18.0.1.1/bin"
   fi
