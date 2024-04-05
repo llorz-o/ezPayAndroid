@@ -83,7 +83,7 @@
         <provider
             tools:replace="android:authorities"
             android:name="io.dcloud.common.util.DCloud_FileProvider"
-            android:authorities="com.joe.ezpayandroid.dc.fileprovider"
+            android:authorities="${applicationId}.dc.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
