@@ -62,11 +62,11 @@ runBuild() {
     # dcloudControlXmlContent=$(cat $dcloudControlXmlPath)
     sed -i 's/appver="[0-9\.]\+"/appver="'"$version_code"'"/' "$dcloudControlXmlPath"
 
-    sourceHtmlPath=$(ezpay_dir)/dist/sources/index.html
+    sourceHtmlPath=$(ezpay_dir)/dist/www/index.html
 
     if [ -e "$sourceHtmlPath" ]; then
         # 将资源文件夹复制到项目目录下
-        androidResourcePath=$projectRoot/app/src/main/assets/apps/H59B14C5E/www
+        androidResourcePath=$projectRoot/app/src/main/assets/apps
         outputResourcePath=$(ezpay_dir)/dist/sources
         # 清空Android目录下的资源文件夹
         rm -rf "${androidResourcePath:?}"/*

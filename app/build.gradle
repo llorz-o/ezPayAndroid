@@ -8,6 +8,7 @@ android {
     defaultConfig {
         applicationId "com.joe.ezpayandroid"
         minSdk 21
+        //noinspection ExpiredTargetSdkVersion
         targetSdk 32
         versionCode 12
         versionName "3.0.4" // appVersion
